@@ -1,0 +1,70 @@
+-- GUI Copy Toạ Độ cho Delta
+
+-- Services
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local CoreGui = game:GetService("CoreGui")
+
+-- Xóa GUI cũ nếu có
+if CoreGui:FindFirstChild("CoordGui") then
+    CoreGui.CoordGui:Destroy()
+end
+
+-- Tạo ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "CoordGui"
+gui.Parent = CoreGui
+
+-- Frame chính
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 100)
+frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+-- UICorner bo góc
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = frame
+
+-- Nút Copy
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, -20, 0, 40)
+button.Position = UDim2.new(0, 10, 0, 30)
+button.Text = "📋 Copy Toạ Độ"
+button.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Parent = frame
+
+local btnCorner = Instance.new("UICorner")
+btnCorner.CornerRadius = UDim.new(0, 6)
+btnCorner.Parent = button
+
+-- Label hiển thị tọa độ
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, -20, 0, 20)
+label.Position = UDim2.new(0, 10, 0, 5)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.Text = "Toạ độ: Chưa lấy"
+label.Font = Enum.Font.SourceSansBold
+label.TextSize = 14
+label.Parent = frame
+
+-- Chức năng nút
+button.MouseButton1Click:Connect(function()
+    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        local pos = hrp.Position
+        local coord = string.format("Vector3.new(%.3f, %.3f, %.3f)", pos.X, pos.Y, pos.Z)
+        label.Text = "Toạ độ: Copied!"
+        print("Copied:", coord)
+        if setclipboard then
+            setclipboard(coord)
+        end
+    else
+        label.Text = "Không tìm thấy HRP"
+    end
+end)
